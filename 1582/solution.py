@@ -99,6 +99,6 @@ class Connect4:
       turn = (turn + 1)%2
   
 if __name__ == "__main__":
-  connect4 = Connect4()
-  connect4.play()
+  game = Connect4()
+  game.play()
 
