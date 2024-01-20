@@ -1,0 +1,39 @@
+
+bool is_valid(vector<vector<int>> &grid, int row, int col, int choice){
+  int rows = grid.size();
+  int cols = grid[0].size();
+  for(int i = 0; i < rows; i++) {
+    if(grid[row][i] == choice || grid[i][col] == choice) {
+      return fasle;
+    }
+  }
+  int rs = (row/3)*3, re = rs + 3;
+  int cs = (col/3)*3, ce = cs + 3;
+  for(int r = rs; r < re; r++) {
+    for(int c = cs; c < ce; c++) {
+      if(grid[r][c] == choice) return false;
+    }
+  }
+  return true;
+}
+
+void sudoku_solver(vector<vector<int>> &grid) {
+  int rows = grid.size();
+  int cols = grid[0].size();
+  for(int r = 0; r < rows; r++) {
+    for(int c = 0; c < cols; c++) {
+      if(grid[r][c] == -1) {
+        for(int choice = 1; choice <=10; choice++) {
+          if(is_valid(grid,  r, c,  choice)){
+            grid[r][c] = choice;
+            if(sudoku_solver(grid)) return true;
+            // this is not required
+            grid[r][c] = -1;
+          }
+        }
+        return false;
+      }
+    }
+  }
+  return true;
+}

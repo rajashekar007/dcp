@@ -1,0 +1,74 @@
+
+
+
+
+void solve_sudoku(vector<vector<int>> &grid, map<pair<int, int>, set<int>> &options) {
+  int rows = grid.size();
+  int cols = grid[0].size();
+  bool finished = true;
+  bool is_valid = [&](int choice, int row, int col) {
+    // choice not in row
+    for(int c = 0; c < cols; c++) {
+      if(grid[row][c] == choice) return false;
+    }
+    // choice not in col
+    for(int r = 0; r < rows; r++) {
+      if(grid[r][col] == choice) return false;
+    }
+    // choice not in 3x3 grid
+    int rs = (row/3)*3, re = rs + 3;
+    int cs = (col/3)*3, ce = cs + 3;
+    for(int r = rs; r < re; r++) {
+      for(int c = cs; c < ce; c++) {
+        if(grid[r][c] == choice) return false;
+      }
+    }
+    return true;
+  }
+  bool make_progress;
+  do {
+    make_progress = false;
+    for(int i = 0; i < rows; i++) {
+      for (int j = 0; j < cols; j++) {
+        if(grid[i][j] != -1) {
+          continue;
+        } else {
+          finished = false;
+          // check options
+          auto key = make_pair(i, j);
+          auto it = options.find(key);
+          if(it != options.end()){
+            if (it->second.size() == 1){
+              // there is only option write to the grid
+              grid[i][j] = it->second[0];
+              make_progress = true;
+              // present_in_row[make_pair(i, it->second[0])] = true;
+              // present_in_col[make_pair(j, it->second[0])] = true;
+            } else {
+              // check if any of the choice has become invalid
+              for(int choice = 1; choice < 10; choice++) {
+                if(is_valid(choice)){
+                  options[key].insert(choice);
+                } else {
+                  // over period choice has become invalid, we need to remove
+                  auto &s = options[key];
+                  if(s.find(choice) != s.end()) {
+                    s.erase(choice);
+                    make_progress = true;
+                  }
+                }
+              }
+            }
+          } else {
+            // check what options do we have
+            for(int choice = 1; choice < 10; choice++) {
+              if(is_valid(choice)){
+                options[key].insert(choice);
+              }
+            }
+          }
+        }
+      }
+    }
+  }while(make_progress);
+}
