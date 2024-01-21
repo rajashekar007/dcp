@@ -1,0 +1,30 @@
+
+
+struct node {
+  int val;
+  node *left;
+  node *right;
+};
+
+
+string stringify(node *root) {
+  if(root == NULL) return "";
+  auto ls = stringify(root->left);
+  auto rs = stringify(root->right);
+  auto s = ls + "L" + itoa(root->val) + "R" + rs;
+  return s;
+}
+
+
+bool check(node *s, node *t) {
+  // if t is completely present in s, return true
+  // else false
+
+  // The easy solution is to check the nodes one by one, but that's like O(MN)
+  // If we model it like substring search, we can use efficient string matching algorithms
+  // like rabin karp and do it in O(M + N)
+  // In order to stringify, I can use inorder with path traced
+  auto ss = stringify(s);
+  auto ts = stringify(t);
+  
+}
